@@ -35,7 +35,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#if defined(__GNU__) || (defined(__ILP32__) && defined(__x86_64__))
+#if defined(__GNU__) || (defined(__ILP32__) && defined(__x86_64__)) || defined(_WIN32)
 #define NOSYSCTL
 #else
 #ifndef __linux__
