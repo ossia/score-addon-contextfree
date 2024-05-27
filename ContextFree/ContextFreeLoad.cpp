@@ -49,6 +49,7 @@ struct MallocDeleter
 {
   void operator()(void* ptr) const { std::free(ptr); }
 };
+#if !defined(_WIN32)
 struct DirCloser
 {
   void operator()(DIR* ptr) const
@@ -135,6 +136,7 @@ public:
     rdbuf(&buf);
   }
 };
+#endif
 }
 
 class OssiaSystem : public AbstractSystem
