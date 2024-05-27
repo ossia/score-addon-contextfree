@@ -214,6 +214,10 @@ public:
     std::vector<FileString> ret;
 
 #if defined(_WIN32)
+    struct FindCloser
+    {
+      void operator()(void* ptr) const { FindClose(ptr); }
+    };
     const FileChar* tempdir = tempFileDirectory();
 
     std::array<wchar_t, 32768> wtempdir;
