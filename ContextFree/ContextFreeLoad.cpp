@@ -1,3 +1,5 @@
+#include "ContextFreeLoad.hpp"
+
 #if defined(_WIN32)
 
 #if !defined(WIN32_LEAN_AND_MEAN)
@@ -360,14 +362,6 @@ struct OssiaCanvas : abstractPngCanvas
   void output(const char* outfilename, int frame = -1) override { }
 
   using abstractPngCanvas::mData;
-};
-
-struct RenderResult
-{
-  std::vector<unsigned char> bytes;
-  QImage::Format fmt{};
-  int width = 0;
-  int height = 0;
 };
 
 RenderResult contextfree_render_file(std::string_view path, int w, int h, int variation)

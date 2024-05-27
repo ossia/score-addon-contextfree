@@ -11,7 +11,16 @@ endif()
 project(score_addon_contextfree LANGUAGES CXX)
 
 add_library(contextfree STATIC
-   3rdparty/context-free/src-common/abstractPngCanvas.cpp
+    3rdparty/context-free/src-agg/src/agg_bezier_arc.cpp
+    3rdparty/context-free/src-agg/src/agg_color_rgba.cpp
+    3rdparty/context-free/src-agg/src/agg_curves.cpp
+    3rdparty/context-free/src-agg/src/agg_trans_affine.cpp
+    3rdparty/context-free/src-agg/src/agg_vcgen_contour.cpp
+    3rdparty/context-free/src-agg/src/agg_vcgen_stroke.cpp
+
+    3rdparty/context-free/src-common/pathIterator.cpp
+
+    3rdparty/context-free/src-common/abstractPngCanvas.cpp
     3rdparty/context-free/src-common/aggCanvas.cpp
     3rdparty/context-free/src-common/ast.cpp
     3rdparty/context-free/src-common/astexpression.cpp
@@ -23,7 +32,6 @@ add_library(contextfree STATIC
     3rdparty/context-free/src-common/CmdInfo.cpp
     3rdparty/context-free/src-common/HSBColor.cpp
     3rdparty/context-free/src-common/makeCFfilename.cpp
-    3rdparty/context-free/src-common/pathIterator.cpp
     3rdparty/context-free/src-common/prettyint.cpp
     3rdparty/context-free/src-common/primShape.cpp
     3rdparty/context-free/src-common/Rand64.cpp
@@ -36,17 +44,17 @@ add_library(contextfree STATIC
     3rdparty/context-free/src-common/tiledCanvas.cpp
     3rdparty/context-free/src-common/variation.cpp
 
-    3rdparty/context-free/src-agg/src/agg_bezier_arc.cpp
-    3rdparty/context-free/src-agg/src/agg_color_rgba.cpp
-    3rdparty/context-free/src-agg/src/agg_curves.cpp
-    3rdparty/context-free/src-agg/src/agg_trans_affine.cpp
-    3rdparty/context-free/src-agg/src/agg_vcgen_contour.cpp
-    3rdparty/context-free/src-agg/src/agg_vcgen_stroke.cpp
-
     3rdparty/context-free/src-win/derived/cfdg.tab.cpp
     3rdparty/context-free/src-win/derived/lex.yy.cpp
 )
 
+set_source_files_properties(
+    3rdparty/context-free/src-win/derived/cfdg.tab.cpp
+    3rdparty/context-free/src-win/derived/lex.yy.cpp
+  PROPERTIES
+    LANGUAGE CXX
+    SKIP_UNITY_BUILD_INCLUSION 1
+)
 if(MSVC)
 else()
   target_compile_options(contextfree PRIVATE -fno-char8_t)
