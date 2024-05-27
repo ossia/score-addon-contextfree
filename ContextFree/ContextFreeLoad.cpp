@@ -192,6 +192,12 @@ public:
   }
   const FileChar* tempFileDirectory() override
   {
+#if defined(_WIN32)
+    static std::array<wchar_t, 32768> tempPathBufferW;
+
+    GetTempPathW((DWORD)tempPathBufferW.size(), tempPathBufferW.data());
+    return tempPathBufferW.data();
+#else
     struct stat sb;
     const char* tmpenv = getenv("TMPDIR");
     if(!tmpenv || stat(tmpenv, &sb) || !S_ISDIR(sb.st_mode))
@@ -201,6 +207,7 @@ public:
     if(!tmpenv || stat(tmpenv, &sb) || !S_ISDIR(sb.st_mode))
       tmpenv = "/tmp/"; // give up
     return tmpenv;
+#endif
   }
   std::vector<FileString> findTempFiles() override
   {
