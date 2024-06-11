@@ -164,11 +164,23 @@ public:
       return nullptr;
     FileString bcopy = b.get();
     bcopy.append(TempSuffixes[tt]);
-    ostr_ptr f = std::make_unique<std::ofstream>(
-        bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
-    nameOut.assign(bcopy);
+    if constexpr(std::is_constructible_v<
+                     std::ofstream, FileString, decltype(std::ios::binary)>)
+    {
+      auto f = std::make_unique<std::ofstream>(
+          bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
+      nameOut.assign(bcopy);
 
-    return f;
+      return f;
+    }
+    else
+    {
+      auto f = std::make_unique<std::wofstream>(
+          bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
+      nameOut.assign(bcopy);
+
+      return f;
+    }
 #else
     std::string t(tempFileDirectory());
     if(t.back() != '/')
