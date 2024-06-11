@@ -55,11 +55,15 @@ set_source_files_properties(
     LANGUAGE CXX
     SKIP_UNITY_BUILD_INCLUSION 1
 )
+
 if(MSVC)
 else()
   target_compile_options(contextfree PRIVATE -fno-char8_t)
 endif()
 
+if(WIN32)
+    target_link_libraries(contextfree PRIVATE Shlwapi)
+endif()
 target_include_directories(contextfree
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-common>
