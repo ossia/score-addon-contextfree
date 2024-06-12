@@ -154,6 +154,30 @@ public:
     return std::make_unique<std::ifstream>(path.c_str(), std::ios::binary);
   }
 
+#if defined(_WIN32)
+  static std::string wide_string_to_string(const std::wstring& wide_string)
+  {
+    if(wide_string.empty())
+    {
+      return "";
+    }
+
+    const auto size_needed = WideCharToMultiByte(
+        CP_UTF8, 0, wide_string.data(), (int)wide_string.size(), nullptr, 0, nullptr,
+        nullptr);
+    if(size_needed <= 0)
+    {
+      throw std::runtime_error(
+          "WideCharToMultiByte() failed: " + std::to_string(size_needed));
+    }
+
+    std::string result(size_needed, 0);
+    WideCharToMultiByte(
+        CP_UTF8, 0, wide_string.data(), (int)wide_string.size(), result.data(),
+        size_needed, nullptr, nullptr);
+    return result;
+  }
+#endif
   ostr_ptr tempFileForWrite(TempType tt, FileString& nameOut) override
   {
 #if defined(_WIN32)
@@ -173,10 +197,20 @@ public:
 
       return f;
     }
-    else
+    else if constexpr(std::is_constructible_v<
+                          std::wofstream, FileString, decltype(std::ios::binary)>)
     {
       auto f = std::make_unique<std::wofstream>(
           bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
+      nameOut.assign(bcopy);
+
+      return f;
+    }
+    else
+    {
+      auto bstr = wide_string_to_string(bcopy);
+      auto f = std::make_unique<std::ofstream>(
+          bstr, std::ios::binary | std::ios::trunc | std::ios::out);
       nameOut.assign(bcopy);
 
       return f;
