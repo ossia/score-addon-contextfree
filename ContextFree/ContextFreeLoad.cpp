@@ -197,15 +197,6 @@ public:
 
       return f;
     }
-    else if constexpr(std::is_constructible_v<
-                          std::wofstream, FileString, decltype(std::ios::binary)>)
-    {
-      auto f = std::make_unique<std::wofstream>(
-          bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
-      nameOut.assign(bcopy);
-
-      return f;
-    }
     else
     {
       auto bstr = wide_string_to_string(bcopy);
