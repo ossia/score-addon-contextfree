@@ -58,14 +58,14 @@ set_source_files_properties(
 
 if(MSVC)
 else()
-  target_compile_options(contextfree PRIVATE -fno-char8_t)
+  target_compile_options(contextfree PRIVATE -fno-char8_t -w)
 endif()
 
 if(WIN32)
     target_link_libraries(contextfree PRIVATE Shlwapi)
 endif()
 target_include_directories(contextfree
-  PUBLIC
+  SYSTEM PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-common/agg-extras>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-agg>
