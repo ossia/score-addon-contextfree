@@ -13,6 +13,8 @@ public:
   halp_meta(name, "Context-Free")
   halp_meta(category, "Visuals")
   halp_meta(c_name, "contextfree")
+  halp_meta(author, "Context-Free Art authors, Jean-Michaël Celerier")
+  halp_meta(manual_url, "https://ossia.io/score-docs/processes/context-free-art.html")
   halp_meta(uuid, "2350a51b-9128-4035-bab5-e532a10d9404")
 
   struct
