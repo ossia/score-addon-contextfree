@@ -188,8 +188,7 @@ public:
       return nullptr;
     FileString bcopy = b.get();
     bcopy.append(TempSuffixes[tt]);
-    if constexpr(std::is_constructible_v<
-                     std::ofstream, FileString, decltype(std::ios::binary)>)
+    if constexpr(requires { std::ofstream(bcopy, std::ios::binary | std::ios::trunc | std::ios::out)>)
     {
       auto f = std::make_unique<std::ofstream>(
           bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
