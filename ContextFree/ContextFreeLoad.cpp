@@ -178,6 +178,11 @@ public:
     return result;
   }
 #endif
+  template <typename T, typename F>
+  static constexpr bool ostream_supports_wstring()
+  {
+    return requires(F f) { T(f, std::ios::binary | std::ios::trunc | std::ios::out); };
+  }
   ostr_ptr tempFileForWrite(TempType tt, FileString& nameOut) override
   {
 #if defined(_WIN32)
@@ -188,7 +193,7 @@ public:
       return nullptr;
     FileString bcopy = b.get();
     bcopy.append(TempSuffixes[tt]);
-    if constexpr(requires { std::ofstream(bcopy, std::ios::binary | std::ios::trunc | std::ios::out)>)
+    if constexpr(ostream_supports_wstring<std::ofstream, FileString>())
     {
       auto f = std::make_unique<std::ofstream>(
           bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
