@@ -178,14 +178,11 @@ public:
     return result;
   }
 #endif
-  template <typename T, typename F>
-  static constexpr bool ostream_supports_wstring()
-  {
-    return requires(F f) { T(f, std::ios::binary | std::ios::trunc | std::ios::out); };
-  }
-  ostr_ptr tempFileForWrite(TempType tt, FileString& nameOut) override
-  {
+
 #if defined(_WIN32)
+  template <typename T>
+  ostr_ptr tempFileForWrite_template(T tt, FileString& nameOut)
+  {
     const FileChar* wtempdir = tempFileDirectory();
 
     std::unique_ptr<wchar_t, MallocDeleter> b{_wtempnam(wtempdir, TempPrefixes[tt])};
@@ -193,7 +190,9 @@ public:
       return nullptr;
     FileString bcopy = b.get();
     bcopy.append(TempSuffixes[tt]);
-    if constexpr(ostream_supports_wstring<std::ofstream, FileString>())
+
+    if constexpr(std::is_constructible_v<
+                     std::ofstream, FileString, std::ios_base::openmode>)
     {
       auto f = std::make_unique<std::ofstream>(
           bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
@@ -210,7 +209,18 @@ public:
 
       return f;
     }
+  }
+#endif
+
+  ostr_ptr tempFileForWrite(TempType tt, FileString& nameOut) override
+  {
+#if defined(_WIN32)
+    // Using a template is required to make sure that only the right if constexpr
+    // branch is instantiated to be able to handle the variations of
+    // MSVC STL / libc++ / libstdc++ which all differ in which constructors std::ofstream provides
+    return tempFileForWrite_template(tt, nameOut);
 #else
+    // sanity
     std::string t(tempFileDirectory());
     if(t.back() != '/')
       t.push_back('/');
