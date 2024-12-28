@@ -57,6 +57,7 @@ set_source_files_properties(
 )
 
 if(MSVC)
+  target_compile_options(contextfree PRIVATE /Zc:char8_t-)
 else()
   target_compile_options(contextfree PRIVATE -fno-char8_t -w)
 endif()
