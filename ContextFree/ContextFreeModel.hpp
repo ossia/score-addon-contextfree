@@ -64,6 +64,8 @@ public:
 
   std::string current_program;
   int current_variation{};
+
+  std::vector<unsigned char> m_bytes;
 };
 
 }

@@ -25,7 +25,8 @@ ContextFree::worker::work(std::string_view in, int w, int h, int var)
   return [rendered = contextfree_render_file(path, w, h, var)](ContextFree& f) mutable {
     f.outputs.image.create(rendered.width, rendered.height);
     halp::rgb_texture& tex = f.outputs.image.texture;
-    tex.update(rendered.bytes.data(), rendered.width, rendered.height);
+    std::swap(f.m_bytes, rendered.bytes);
+    tex.update(f.m_bytes.data(), rendered.width, rendered.height);
     f.outputs.image.upload();
   };
 }
