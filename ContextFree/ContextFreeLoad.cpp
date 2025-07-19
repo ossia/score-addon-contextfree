@@ -180,19 +180,19 @@ public:
 #endif
 
 #if defined(_WIN32)
-  template <typename T>
-  ostr_ptr tempFileForWrite_template(T tt, FileString& nameOut)
+  template <typename T, typename FileString_T>
+  ostr_ptr tempFileForWrite_template(T tt, FileString_T& nameOut)
   {
     const FileChar* wtempdir = tempFileDirectory();
 
     std::unique_ptr<wchar_t, MallocDeleter> b{_wtempnam(wtempdir, TempPrefixes[tt])};
     if(!b)
       return nullptr;
-    FileString bcopy = b.get();
+    FileString_T bcopy = b.get();
     bcopy.append(TempSuffixes[tt]);
 
     if constexpr(std::is_constructible_v<
-                     std::ofstream, FileString, std::ios_base::openmode>)
+                     std::ofstream, FileString_T, std::ios_base::openmode>)
     {
       auto f = std::make_unique<std::ofstream>(
           bcopy, std::ios::binary | std::ios::trunc | std::ios::out);
