@@ -1,14 +1,20 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-if(NOT TARGET score_lib_base)
-  include(ScoreExternalAddon)
-endif()
-
-if(NOT TARGET score_plugin_avnd)
-  return()
-endif()
 
 project(score_addon_contextfree LANGUAGES CXX)
+
+# Use the Avendish the host (ossia score) provides; otherwise fetch it.
+find_package(Avendish QUIET)
+if(NOT Avendish_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    Avendish
+    GIT_REPOSITORY "https://github.com/celtera/avendish"
+    GIT_TAG main)
+  FetchContent_Populate(Avendish)
+  list(APPEND CMAKE_PREFIX_PATH "${avendish_SOURCE_DIR}")
+  find_package(Avendish REQUIRED)
+endif()
 
 add_library(contextfree STATIC
     3rdparty/context-free/src-agg/src/agg_bezier_arc.cpp
@@ -75,25 +81,18 @@ target_include_directories(contextfree
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-unix>
 )
 
-avnd_score_plugin_init(
-  BASE_TARGET score_addon_contextfree
-)
+avnd_addon_init(NAME score_addon_contextfree)
 
-avnd_score_plugin_add(
-  BASE_TARGET score_addon_contextfree
+avnd_addon_object(
+  BASE score_addon_contextfree
+  C_NAME contextfree
+  CLASS ContextFree
+  NAMESPACE vo
+  DEPENDENCIES contextfree
   SOURCES
     ContextFree/ContextFreeModel.hpp
     ContextFree/ContextFreeModel.cpp
     ContextFree/ContextFreeLoad.cpp
-    ContextFree/ContextFreeLoad.hpp
-  TARGET contextfree
-  MAIN_CLASS ContextFree
-  NAMESPACE vo
-)
-target_link_libraries(score_addon_contextfree PRIVATE contextfree)
+    ContextFree/ContextFreeLoad.hpp)
 
-avnd_score_plugin_finalize(
-  BASE_TARGET score_addon_contextfree
-  PLUGIN_VERSION 1
-  PLUGIN_UUID "e3b22418-ea16-48e5-8f0b-b00aa49f4a81"
-)
+avnd_addon_finalize(NAME score_addon_contextfree UUID e3b22418-ea16-48e5-8f0b-b00aa49f4a81 VERSION 1)
