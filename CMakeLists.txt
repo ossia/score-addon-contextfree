@@ -89,6 +89,12 @@ target_include_directories(contextfree
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-unix>
 )
 
+# Standalone back-ends compile generated sources (in the build tree) that include
+# the object headers by their in-repo path (e.g. <ContextFree/ContextFreeModel.hpp>);
+# carry the addon root so those resolve. The object lib reuses this 'contextfree'
+# target, so back-ends inherit it. Score builds add it via score's own machinery.
+target_include_directories(contextfree PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+
 avnd_addon_init(NAME score_addon_contextfree)
 
 avnd_addon_object(
