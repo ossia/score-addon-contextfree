@@ -1,5 +1,7 @@
 #include "ContextFreeLoad.hpp"
 
+#include <cstdlib>
+
 #if defined(_WIN32)
 
 #if !defined(WIN32_LEAN_AND_MEAN)
