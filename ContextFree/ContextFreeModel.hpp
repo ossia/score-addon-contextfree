@@ -5,6 +5,8 @@
 #include <halp/meta.hpp>
 #include <halp/texture.hpp>
 
+#include <vector>
+
 namespace vo
 {
 class ContextFree
