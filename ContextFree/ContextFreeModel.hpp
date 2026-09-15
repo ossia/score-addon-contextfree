@@ -5,6 +5,10 @@
 #include <halp/meta.hpp>
 #include <halp/texture.hpp>
 
+#include <climits>
+#include <functional>
+#include <string>
+#include <string_view>
 #include <vector>
 
 namespace vo
