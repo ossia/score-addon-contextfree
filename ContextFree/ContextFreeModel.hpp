@@ -18,6 +18,10 @@ class ContextFree
 public:
   halp_meta(name, "Context-Free Art")
   halp_meta(category, "Visuals/Textures")
+  halp_meta(
+      description,
+      "Render a Context Free Art program to an image with selectable variation and "
+      "dimensions.")
   halp_meta(c_name, "contextfree")
   halp_meta(author, "Context-Free Art authors, Jean-Michaël Celerier")
   halp_meta(manual_url, "https://ossia.io/score-docs/processes/context-free-art.html")
