@@ -92,6 +92,11 @@ avnd_score_plugin_add(
 )
 target_link_libraries(score_addon_contextfree PRIVATE contextfree)
 
+if(COMMAND score_register_license)
+  score_register_license("Context Free" URL "https://www.contextfreeart.org" FILES "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/LICENSE.txt")
+  score_register_license("Anti-Grain Geometry" NOTICES "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/context-free/src-agg/src/agg_curves.cpp")
+endif()
+
 avnd_score_plugin_finalize(
   BASE_TARGET score_addon_contextfree
   PLUGIN_VERSION 1
